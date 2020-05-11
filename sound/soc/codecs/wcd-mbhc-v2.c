@@ -865,8 +865,9 @@ exit:
 static void wcd_enable_mbhc_supply(struct wcd_mbhc *mbhc,
 			enum wcd_mbhc_plug_type plug_type)
 {
-
 	struct snd_soc_codec *codec = mbhc->codec;
+
+	pr_debug("%s: enter\n", __func__);
 
 	/*
 	 * Do not disable micbias if recording is going on or
@@ -883,7 +884,7 @@ static void wcd_enable_mbhc_supply(struct wcd_mbhc *mbhc,
 		    plug_type == MBHC_PLUG_TYPE_HEADSET)
 			wcd_enable_curr_micbias(mbhc, WCD_MBHC_EN_MB);
 	} else {
-		if (plug_type == MBHC_PLUG_TYPE_HEADSET) {
+		if (plug_type == MBHC_PLUG_TYPE_HEADSET || plug_type == MBHC_PLUG_TYPE_GND_MIC_SWAP) {
 			if (mbhc->is_hs_recording || mbhc->micbias_enable)
 				wcd_enable_curr_micbias(mbhc,
 							WCD_MBHC_EN_MB);

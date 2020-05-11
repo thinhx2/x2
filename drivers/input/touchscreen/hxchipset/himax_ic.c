@@ -38,6 +38,7 @@ extern int g_i_CID_MAJ;
 extern int g_i_CID_MIN;
 extern unsigned char i_CTPM_FW1[];
 extern unsigned char i_CTPM_FW2[];
+extern unsigned char i_CTPM_FW3[];
 #endif
 
 extern unsigned char	IC_TYPE;
@@ -48,6 +49,7 @@ extern bool DSRAM_Flag;
 extern struct himax_ic_data* ic_data;
 extern struct himax_ts_data *private_ts;
 extern int lcd_panel_id;
+extern int tpsensor;
 int himax_touch_data_size = 128;
 
 #ifdef HX_TP_PROC_2T2R
@@ -2013,21 +2015,29 @@ bool himax_ic_package_check(struct i2c_client *client)
             CID_VER_MIN_FLASH_LENG	= 1;
             //PANEL_VERSION_ADDR		= 49156;  //0x00C004
             //PANEL_VERSION_LENG		= 1;
-if(lcd_panel_id == 0){
-	I("%s: andy lcd_panel_id = %d\n", __func__,lcd_panel_id);
+if((lcd_panel_id == 0)&&(tpsensor == 2)){
+	I("%s: andy DJN OLD PANEL lcd_panel_id = %d\n", __func__,lcd_panel_id);
 #ifdef HX_AUTO_UPDATE_FW
             g_i_FW_VER  = i_CTPM_FW1[FW_VER_MAJ_FLASH_ADDR]<<8 |i_CTPM_FW1[FW_VER_MIN_FLASH_ADDR];
             g_i_CFG_VER = i_CTPM_FW1[CFG_VER_MAJ_FLASH_ADDR]<<8 |i_CTPM_FW1[CFG_VER_MIN_FLASH_ADDR];
             g_i_CID_MAJ = i_CTPM_FW1[CID_VER_MAJ_FLASH_ADDR];
             g_i_CID_MIN = i_CTPM_FW1[CID_VER_MIN_FLASH_ADDR];
 #endif
-}else{
+}else if(lcd_panel_id == 1){
 	I("%s: andy lcd_panel_id = %d\n", __func__,lcd_panel_id);
 #ifdef HX_AUTO_UPDATE_FW
 			g_i_FW_VER  = i_CTPM_FW2[FW_VER_MAJ_FLASH_ADDR]<<8 |i_CTPM_FW2[FW_VER_MIN_FLASH_ADDR];
 			g_i_CFG_VER = i_CTPM_FW2[CFG_VER_MAJ_FLASH_ADDR]<<8 |i_CTPM_FW2[CFG_VER_MIN_FLASH_ADDR];
 			g_i_CID_MAJ = i_CTPM_FW2[CID_VER_MAJ_FLASH_ADDR];
 			g_i_CID_MIN = i_CTPM_FW2[CID_VER_MIN_FLASH_ADDR];
+#endif
+}else {
+	I("%s: andy enter new panel tpsensor = %d, lcd_panel_id = %d\n", __func__,tpsensor,lcd_panel_id);
+#ifdef HX_AUTO_UPDATE_FW
+			g_i_FW_VER  = i_CTPM_FW3[FW_VER_MAJ_FLASH_ADDR]<<8 |i_CTPM_FW3[FW_VER_MIN_FLASH_ADDR];
+			g_i_CFG_VER = i_CTPM_FW3[CFG_VER_MAJ_FLASH_ADDR]<<8 |i_CTPM_FW3[CFG_VER_MIN_FLASH_ADDR];
+			g_i_CID_MAJ = i_CTPM_FW3[CID_VER_MAJ_FLASH_ADDR];
+			g_i_CID_MIN = i_CTPM_FW3[CID_VER_MIN_FLASH_ADDR];
 #endif
 }
             I("Himax IC package 83112_in\n");

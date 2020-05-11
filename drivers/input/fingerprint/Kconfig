@@ -8,4 +8,6 @@ config FINGERPRINT_FPC1020
 
 endmenu
 source "drivers/input/fingerprint/goodix/Kconfig"
+source "drivers/input/fingerprint/goodix_zero/Kconfig"
+
 

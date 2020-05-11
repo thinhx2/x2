@@ -254,15 +254,16 @@ int msm_dss_enable_vreg(struct dss_vreg *in_vreg, int num_vreg, int enable)
 			}
 		}
 	} else {
-#ifdef CONFIG_ZANGYA_CAMERA
+
 		for (i = num_vreg-1; i >= 0; i--) {
+#ifdef CONFIG_ZANGYA_CAMERA
 			if (HX_SMWP_EN == 1){
 				if((strcmp(in_vreg[i].vreg_name,"lab") == 0) || (strcmp(in_vreg[i].vreg_name,"ibb") == 0) || (strcmp(in_vreg[i].vreg_name,"wqhd-vddio") == 0)){
 					pr_debug("TP_GESTURE don't disable[%d] %s\n",i,in_vreg[i].vreg_name);
 					continue;
 				}
 			}
-
+#endif
 			if (in_vreg[i].pre_off_sleep)
 				usleep_range(in_vreg[i].pre_off_sleep * 1000,
 					in_vreg[i].pre_off_sleep * 1000);
@@ -274,7 +275,7 @@ int msm_dss_enable_vreg(struct dss_vreg *in_vreg, int num_vreg, int enable)
 					in_vreg[i].post_off_sleep * 1000);
 			pr_debug("Power_off Disable [%d]  %s\n",i,in_vreg[i].vreg_name);
 		}
-#endif
+
 	}
 	return rc;
 

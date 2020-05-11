@@ -32,6 +32,10 @@
 #include <linux/of_gpio.h>
 #include <linux/qpnp/qpnp-adc.h>
 
+#ifdef FACT_LIMIT_CODE
+#include "fact-smb-limitation.h"
+#endif
+
 #define SMB2_DEFAULT_WPWR_UW	8000000
 #define PROTECT_TEMP_DELAY_MS	2000
 
@@ -1025,6 +1029,9 @@ static int smb2_batt_get_prop(struct power_supply *psy,
 		break;
 	case POWER_SUPPLY_PROP_CAPACITY:
 		rc = smblib_get_prop_batt_capacity(chg, val);
+#ifdef FACT_LIMIT_CODE
+		factory_limitation_execute(chg, val->intval);
+#endif
 		break;
 	case POWER_SUPPLY_PROP_SYSTEM_TEMP_LEVEL:
 		rc = smblib_get_prop_system_temp_level(chg, val);
@@ -2325,8 +2332,6 @@ static int smb2_probe(struct platform_device *pdev)
 	struct smb_charger *chg;
 	int rc = 0;
 	union power_supply_propval val;
-	
-	
 	int usb_present, batt_present, batt_health, batt_charge_type;
 
 	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
@@ -2413,6 +2418,10 @@ static int smb2_probe(struct platform_device *pdev)
 		pr_err("Couldn't initialize hardware rc=%d\n", rc);
 		goto cleanup;
 	}
+
+#ifdef FACT_LIMIT_CODE
+	factory_limitation_init(&chg->dev->kobj);
+#endif
 
 	rc = smb2_init_dc_psy(chip);
 	if (rc < 0) {
@@ -2531,6 +2540,10 @@ static int smb2_remove(struct platform_device *pdev)
 {
 	struct smb2 *chip = platform_get_drvdata(pdev);
 	struct smb_charger *chg = &chip->chg;
+
+#ifdef FACT_LIMIT_CODE
+	factory_limitation_remove(&chg->dev->kobj);
+#endif
 
 	power_supply_unregister(chg->batt_psy);
 	power_supply_unregister(chg->usb_psy);

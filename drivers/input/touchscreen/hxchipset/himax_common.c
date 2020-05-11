@@ -20,6 +20,7 @@
 #define TS_WAKE_LOCK_TIMEOUT		(2 * HZ)
 #define FRAME_COUNT 5
 extern int lcd_panel_id;
+extern int tpsensor;
 #ifdef HX_RST_PIN_FUNC
 extern void himax_ic_reset(uint8_t loadconfig,uint8_t int_off);
 #endif
@@ -34,6 +35,11 @@ extern void himax_ic_reset(uint8_t loadconfig,uint8_t int_off);
 	unsigned char i_CTPM_FW2[]=
 	{
 		#include "L8800_Truly_D05_C0E.i"
+	};
+
+	unsigned char i_CTPM_FW3[]=
+	{
+		#include "L8800_DJN_D08_C10.i"
 	};
 
 #endif
@@ -359,14 +365,18 @@ static int i_update_FW(void)
 #ifdef HX_SMART_WAKEUP
 	fw_upgrade_flag = true;
 #endif
-	if(lcd_panel_id == 0){
+	if((lcd_panel_id == 0)&&(tpsensor == 2)){
 		ImageBuffer = i_CTPM_FW1;
 		fullFileLength = sizeof(i_CTPM_FW1);
-		I("%s: andy lcd_panel_id = %d\n", __func__,lcd_panel_id);
-	}else{
+		I("%s: andy lcd_panel_id = %d,tpsensor = %d\n", __func__,lcd_panel_id,tpsensor);
+	}else if(lcd_panel_id == 1){
 		ImageBuffer = i_CTPM_FW2;
 		fullFileLength = sizeof(i_CTPM_FW2);
 		I("%s: andy lcd_panel_id = %d\n", __func__,lcd_panel_id);
+	}else{
+		ImageBuffer = i_CTPM_FW3;
+		fullFileLength = sizeof(i_CTPM_FW3);
+		I("%s: andy enter new DJN fw tpsensor= %d\n", __func__,tpsensor);
 	}
     I("%s: i_fullFileLength = %d\n", __func__,fullFileLength);
 
