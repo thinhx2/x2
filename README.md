@@ -2,7 +2,7 @@ WHAT IS THIS?
 =============
 
 Linux Kernel source code for the devices:
-* bq aquaris X2
+* bq aquaris X2 Pro
 
 
 BUILD INSTRUCTIONS?
@@ -11,13 +11,13 @@ BUILD INSTRUCTIONS?
 Specific sources are separated by releases with it's corresponding number. First, you should
 clone the project:
 
-        $ git clone https://github.com/bq/aquaris-X2.git
+        $ git clone https://github.com/bq/aquaris-X2-Pro.git
 
 After it, choose the release you would like to build:
 
-*Aquaris X2*
+*Aquaris X2 Pro*
 
-        $ mv aquaris-X2 kernel
+        $ mv aquaris-X2-Pro kernel
         $ cd kernel
         $ git checkout tags/{release}
         $ cd ..
@@ -39,7 +39,7 @@ Finally, build the kernel according the next table of product names:
 
 | device                    | product                 |
 | --------------------------|-------------------------|
-| bq aquaris X2             | zangya                  |
+| bq aquaris X2 Pro         | zangyapro               |
 
 
         $ make -C kernel O=../KERNEL_OUT ARCH=arm64 CROSS_COMPILE=../aarch64-linux-android-4.9 {product}_defconfig
